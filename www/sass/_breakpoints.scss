@@ -1,0 +1,46 @@
+// Container:
+$max-width: 1440px;
+
+// Breakpoints:
+$worktop: min-width 1440px;
+$desktop: min-width 960px;
+$tablet: min-width 768px;
+$tablet-only: min-width 768px max-width 959px;
+$mobile-only: max-width 767px;
+$above-mobile: min-width 768px;
+$up-to-desktop: max-width  959px;
+$desktop-only: min-width 960px max-width 1439px;
+
+// Helper classes:
+.hide-mobile {
+    @include media($mobile-only) {
+        display: none !important;
+    }
+}
+
+.hide-desktop {
+    @include media($above-mobile) {
+        display: none !important;
+    }
+}
+
+body {
+    &:before {
+        width: 0;
+        height: 0;
+        position: absolute;
+        visibility: hidden;
+
+        @include media($mobile-only) {
+            content: "mobile";
+        }
+
+        @include media($tablet-only) {
+            content: "tablet";
+        }
+
+        @include media($desktop) {
+            content: "desktop";
+        }
+    }
+}

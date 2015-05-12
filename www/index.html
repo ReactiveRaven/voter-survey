@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>Radio Bot</title>
+        <script src="lib/angular/angular.min.js"></script>
+        <script src="lib/jquery/dist/jquery.min.js"></script>
+        <script src="lib/CornerCouch/angular-cornercouch.js"></script>
+        <script src="compiled/radiobot.js"></script>
+        <link href="compiled/css/main.css" media="screen" rel="stylesheet" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    </head>
+    <body ng-app="radiobot">
+        <div class="container" ng-controller="BotCtrl">
+
+            <section
+                id="media"
+                class="player"
+                ng-class="{hide: tab !== 'player'}"
+            >
+                <header>
+                    <div class="logo">Byng Radio</div>
+                    <div id="status">
+                        Now Playing: <span id="now-playing"></span>
+                    </div>
+                    <div id="rating"></div>
+                </header>
+                <div id="player"></div>
+            </section>
+
+            <section
+                id="admin"
+                class="player"
+                ng-class="{hide: tab === 'player'}"
+                ng-controller="AdminCtrl"
+            >
+                <ol>
+                    <li
+                         ng-repeat="track in db.rows | filter:{ type: 'track', user: username } "
+                        class="{{ track.tracktype }}"
+                    >
+                        {{ track.title }}
+                        <button
+                            ng-click="removeTrack(track)"
+                        >
+                            Remove
+                        </button>
+                    </li>
+                </ol>
+
+                <input type="text" ng-model="newtrack" />
+                <button ng-click="addTrack()">Add track</button>
+                Type: {{ classifyurl(newtrack) }} ID: {{ extractid(newtrack) }} Title: {{ videotitle || '???' }}
+
+            </section>
+
+            <aside id="playlist">
+                <a ng-click="toggleAdmin()" class="admin">
+                    <span ng-if="tab === 'player'">
+                        <span>Admin</span> | Add Tracks
+                    </span>
+                    <span ng-if="tab === 'admin'">
+                        <span>Player</span> | Watch video
+                    </span>
+                </a>
+                <ol type="1">
+                    <li ng-repeat="item in playlist(10)">{{ item.value.title }}</li>
+                </ol>
+                <div class="controls">
+                    <a href="#" class="scrollup"></a>
+                    <a href="#" class="down"></a>
+                </div>
+            </aside>
+
+        </div>
+    </body>
+</html>

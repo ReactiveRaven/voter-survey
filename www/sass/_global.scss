@@ -1,0 +1,92 @@
+body {
+    @include outer-container;
+
+    background: $black;
+    color: $byng;
+    margin: 0;
+}
+
+.container {
+    @include outer-container;
+    @include clearfix;
+}
+
+#media, #admin {
+    @include span-columns(8);
+
+    position: relative;
+    left: 30px;
+
+    &.hide {
+        display: none;
+    }
+
+    header {
+        @include clearfix;
+
+        padding: 20px;
+        border-bottom: 2px solid $byng;
+        height: 65px;
+
+        .logo {
+            @include span-columns(3 of 8);
+        }
+
+        #status {
+            @include span-columns(5 of 8);
+
+            text-align: right;
+            color: $byng;
+            margin: 0;
+            text-transform: uppercase;
+        }
+    }
+
+    #player {
+        // @include vertical-align;
+        // @include horizontal-align;
+
+        margin: 10%;
+    }
+}
+
+#playlist {
+    @include span-columns(4);
+
+    background: $byng;
+    display: block;
+    margin: 0;
+    right: 0;
+    top: 0;
+
+    .admin {
+        width: 100%;
+        color: $black;
+        text-decoration: none;
+        display: block;
+        height: 63px;
+        line-height: 65px;
+        text-align: center;
+
+        span {
+            text-transform: uppercase;
+        }
+    }
+
+    ol {
+        margin: 0;
+        padding: 0;
+        list-style-type: lower-alpha;
+
+        li {
+            border-top: 1px solid lighten($byng, 20%);
+            color: $black;
+            display: block;
+            height: 65px;
+            line-height: 65px;
+            width: 100%;
+            margin: 0;
+            padding-left: 30px;
+        }
+    }
+}

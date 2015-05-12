@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <link href="compiled/css/main.css" media="screen" rel="stylesheet" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+            <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    </head>
+
+    <body>
+        <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+
+        <div class="container">
+
+            <section id="media" class="player">
+                <header>
+                    <div class="logo">Byng Radio</div>
+                    <div id="status">
+                        Now Playing: <span id="now-playing"></span>
+                    </div>
+                    <div id="rating"></div>
+                </header>
+                <div id="player"></div>
+            </section>
+
+            <aside id="playlist">
+                <a href="" class="admin"><span>Admin</span> | Add Tracks</a>
+                <ol type="1">
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                    <li>Moving Ninja - Track Title</li>
+                </ol>
+                <div class="controls">
+                    <a href="#" class="scrollup"></a>
+                    <a href="#" class="down"></a>
+                </div>
+            </aside>
+
+        </div>
+
+        <script>
+            var tag = document.createElement('script');
+
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+            var player;
+
+            function onYouTubeIframeAPIReady() {
+                player = new YT.Player('player', {
+                    height: '390',
+                    width: '640',
+                    videoId: 'iSZ9JpumhcA',
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange,
+                        'onError': nextVideo
+                    }
+                });
+            }
+
+            function onPlayerReady(event) {
+                event.target.playVideo();
+                setNowPlaying();
+            }
+
+
+            function onPlayerStateChange(event) {
+                if (event.data == YT.PlayerState.ENDED) {
+                    nextVideo();
+                }
+
+                if (event.data == YT.PlayerState.PLAYING) {
+                    setNowPlaying();
+                }
+            }
+
+            function nextVideo() {
+                player.loadVideoById({videoId:'6Ctiju3opSA'});
+            }
+
+            function stopVideo() {
+                player.stopVideo();
+            }
+
+            function setNowPlaying() {
+                document.getElementById("now-playing").innerHTML = player.getVideoData().title;
+            }
+    </script>
+    </body>
+</html>

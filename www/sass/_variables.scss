@@ -1,0 +1,48 @@
+// Colours:
+
+$byng: #f3705b;
+$black: #000;
+
+// Helpers:
+
+@mixin vertical-align {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+@mixin horizontal-align {
+    position: relative;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+@mixin half {
+    width: 50%;
+    float: left;
+}
+
+@mixin column {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+@mixin half-width {
+    max-width: 50%;
+}
+
+.hide-mobile {
+    @include media($mobile-only) {
+        display: none !important;
+    }
+}
+
+.hide-desktop {
+    @include media($desktop) {
+        display: none !important;
+    }
+}
