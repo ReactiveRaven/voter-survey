@@ -9,25 +9,96 @@ DEFAULTS=swordfish80645984$(shell if hash boot2docker 2>/dev/null; then boot2doc
 
 default: install start
 
-install: prereqs
-	@echo -n "Installing node dependencies..."; \
-	npm install && \
-	echo "OK"; \
-	echo -n "Installing bower dependencies..."; \
-	${DIR}/node_modules/bower/bin/bower install && \
-	echo "OK";
+npm-install: require-node require-npm
+	@echo -n "Installing npm packages..."; \
+    MISSING_PACKAGES=0; \
+    exec 3< <(./scripts/node_packages.js); \
+    while read -u 3 line; \
+    do \
+        if ! ls node_modules | grep --silent $$line; \
+        then \
+            if [[ $$MISSING_PACKAGES -eq 0 ]]; \
+            then \
+                echo; \
+            fi; \
+            echo "    Missing $$line"; \
+            MISSING_PACKAGES=$$((MISSING_PACKAGES+1)); \
+        fi; \
+    done; \
+    if [[ $$MISSING_PACKAGES -eq 0 ]]; \
+    then \
+        echo "OK"; \
+    else \
+        echo -n "    Triggering install..."; \
+        if npm install >/dev/null 2>&1; \
+        then \
+            echo "OK"; \
+        else \
+            echo "ERR"; \
+            echo "Could not install. Run 'npm install' to debug." \
+            exit 1; \
+        fi; \
+    fi;
+
+bower-install: npm-install require-node
+	@echo -n "Installing bower dependencies..."; \
+    MISSING_PACKAGES=0; \
+    exec 3< <(./scripts/bower_packages.js); \
+    while read -u 3 line; \
+    do \
+        if ! ls www/lib | grep --silent $$line; \
+        then \
+            if [[ $$MISSING_PACKAGES -eq 0 ]]; \
+            then \
+                echo; \
+            fi; \
+            echo "    Missing $$line"; \
+            MISSING_PACKAGES=$$((MISSING_PACKAGES+1)); \
+        fi; \
+    done; \
+    if [[ $$MISSING_PACKAGES -eq 0 ]]; \
+    then \
+        echo "OK"; \
+    else \
+        echo -n "    Triggering install..."; \
+        if node_modules/bower/bin/bower install >/dev/null 2>&1; \
+        then \
+            echo "OK"; \
+        else \
+            echo "ERR"; \
+            echo "Could not install. Run 'npm install' to debug." \
+            exit 1; \
+        fi; \
+    fi;
+
+install: npm-install bower-install
 
 prereqs: require-npm require-docker require-curl
 
 require-npm:
-	@if ! hash npm 2>/dev/null; \
+	@echo -n "Checking for npm..."; \
+	if hash npm 2>/dev/null; \
 	then \
+        echo "OK"; \
+    else \
+        echo "ERR"; \
 		echo "NPM is required"; \
 		echo "    It is used to install node dependencies and is usually bundled with node."; \
 		echo "    Download from nodejs.org"; \
 		echo; \
 		exit 1; \
 	fi;
+
+require-node:
+	@echo -n "Checking for node..."; \
+    if hash node 2>/dev/null; \
+    then \
+        echo "OK"; \
+    else \
+        echo "ERR"; \
+        echo "Node not found. Cannot run node scripts."; \
+        exit 1; \
+    fi;
 
 require-docker:
 	@if ! hash docker 2>/dev/null; \
